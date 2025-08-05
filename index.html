@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Live Litehaus Monitor</title>
+  <style>
+    body {
+      background-color: black;
+      color: #00FF00;
+      font-family: monospace;
+      white-space: pre-wrap;
+      padding: 1em;
+    }
+    #output {
+      max-height: 90vh;
+      overflow-y: scroll;
+    }
+  </style>
+</head>
+<body>
+  <h2>Live Litehaus Monitor</h2>
+  <div id="output">Connecting to Litehaus beacon...</div>
+
+  <script>
+    const output = document.getElementById("output");
+    const ws = new WebSocket("ws://localhost:8083");
+
+    ws.onopen = () => {
+      output.textContent += "\nConnected. Awaiting data...\n\n";
+    };
+
+    ws.onmessage = (event) => {
+      output.textContent += event.data;
+      output.scrollTop = output.scrollHeight;
+    };
+
+    ws.onclose = () => {
+      output.textContent += "\n\n⚠️ Connection closed.";
+    };
+
+    ws.onerror = (err) => {
+      output.textContent += `\n\n🚨 WebSocket error: ${err.message}`;
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  litehaus:
+    build: .
+    container_name: litehaus-stack
+    ports:
+      - "7502:7502"
+    volumes:
+      # Mount logs so you can check them from the host
+      - ./logs:/var/log/litehaus
+      # Optional: mount config files for easy editing
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+    restart: unless-stopped
+    networks:
+      - litehaus-net
+
+networks:
+  litehaus-net:
+    driver: bridge

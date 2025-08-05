@@ -1,0 +1,27 @@
+:7502 {
+    # Handle static files (CSS, JS, images) if you have any
+    handle /static/* {
+        file_server {
+            root /app
+        }
+    }
+    
+    # Proxy API/WebSocket calls to the litehaus executable (9000/9001)
+    handle /api/* {
+        reverse_proxy localhost:9000
+    }
+    
+    handle /ws/* {
+        reverse_proxy localhost:9001
+    }
+    
+    # Everything else goes to the Python rebroadcaster (8081/8083)
+    handle {
+        reverse_proxy localhost:8081
+    }
+    
+    # Enable logging
+    log {
+        output file /var/log/litehaus/caddy-access.log
+    }
+}
